@@ -1,0 +1,31 @@
+# Virtual environment directory
+venv/
+
+# Python bytecode files
+*.pyc
+*.pyo
+__pycache__/
+
+# PyCharm project files
+.idea/
+
+# VS Code project files
+.vscode/
+
+# macOS system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+
+# Logs
+*.log
+
+# Unit test coverage
+*.coverage
+coverage.xml
+nosetests.xml
+test_*.xml
+
+# Local environment files (if you have them)
+.env
