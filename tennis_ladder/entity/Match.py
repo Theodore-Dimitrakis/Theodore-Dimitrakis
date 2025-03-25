@@ -9,7 +9,7 @@ class Match(Base):
     match_id = Column(Integer, primary_key=True)
     player1_id = Column(Integer, ForeignKey('players.player_id'))
     player2_id = Column(Integer, ForeignKey('players.player_id'))
-    set_scores = Column(String)  # Store set scores as a string (e.g., "6-3, 6-4")
+    set_scores = Column(String)
     winner_id = Column(Integer, ForeignKey('players.player_id'))
     date_played = Column(String, nullable=True)
 
