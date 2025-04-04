@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from entity.Player import Player
 
 
-class PlayerDAO:
+class PlayerRepository:
     def __init__(self, session: Session):
         self.session = session
 

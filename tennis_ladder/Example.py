@@ -1,15 +1,13 @@
 from DBInit import DBInit
-from dao.PlayerDAO import PlayerDAO
+from repository.PlayerRepository import PlayerRepository
 from service.PlayerService import PlayerService
 from controller.PlayerController import PlayerController
 
-# Initialize DB session using existing DBInit logic
 db_init = DBInit()
-session = db_init.session  # Reuse the session
+session = db_init.session
 
-# Instantiate layers
-player_dao = PlayerDAO(session)
-player_service = PlayerService(player_dao)
+player_repository = PlayerRepository(session)
+player_service = PlayerService(player_repository)
 player_controller = PlayerController(player_service)
 
 if __name__ == "__main__":

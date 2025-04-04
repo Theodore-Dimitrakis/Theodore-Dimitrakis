@@ -3,7 +3,7 @@ from entity.Match import Match
 from entity.Player import Player
 
 
-class MatchDAO:
+class MatchRepository:
     def __init__(self, session: Session):
         self.session = session
 
