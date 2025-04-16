@@ -1,4 +1,6 @@
-from sqlalchemy import Column, Integer, ForeignKey, String
+from datetime import datetime, timezone
+
+from sqlalchemy import Column, Integer, ForeignKey, String, DateTime
 from sqlalchemy.orm import relationship
 
 from db_utils.DBUtils import Base
@@ -6,19 +8,17 @@ from db_utils.DBUtils import Base
 class Match(Base):
     __tablename__ = 'matches'
 
-    match_id = Column(Integer, primary_key=True)
-    player1_id = Column(Integer, ForeignKey('players.player_id'))
-    player2_id = Column(Integer, ForeignKey('players.player_id'))
+    match_id = Column(Integer, primary_key=True, autoincrement=True)
+    player1_id = Column(Integer, ForeignKey('players.player_id'), nullable=False)
+    player2_id = Column(Integer, ForeignKey('players.player_id'), nullable=False)
     set_scores = Column(String)
     winner_id = Column(Integer, ForeignKey('players.player_id'))
-    date_played = Column(String, nullable=True)
-
+    date_played = Column(DateTime, default=datetime.now(timezone.utc))
     player1 = relationship("Player", foreign_keys=[player1_id])
     player2 = relationship("Player", foreign_keys=[player2_id])
     winner = relationship("Player", foreign_keys=[winner_id])
 
-    def __init__(self, match_id, player1, player2, set_scores, winner):
-        self.match_id = match_id
+    def __init__(self, player1, player2, set_scores, winner):
         self.player1 = player1
         self.player2 = player2
         self.set_scores = set_scores

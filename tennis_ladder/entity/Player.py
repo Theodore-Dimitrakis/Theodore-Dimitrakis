@@ -16,7 +16,6 @@ class Player(Base):
         self.rank = rank
         self.total_wins = total_wins
         self.total_losses = total_losses
-        self.matches_played = []
 
     def __repr__(self):
         return f"Player(id={self.player_id}, name={self.name}, rank={self.rank})"
