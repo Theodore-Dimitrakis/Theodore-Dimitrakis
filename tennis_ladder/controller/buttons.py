@@ -1,5 +1,9 @@
 import tkinter as tk
-
+import sys
+import os
+# Add the parent directory to the system path to import DBInit
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+from DBInit import DBInit
 # from tkinter import PhotoImage
 
 main_window = tk.Tk()
@@ -14,6 +18,10 @@ main_window.geometry("1000x600")
 # left_frame.grid(row=1,column=0,pady='20',sticky='w')
 
 
+def initialize_database():
+    db_init = DBInit()
+    db_init.initialize_db()
+
 btn_initialize = tk.Button(
     main_window,
     text="Initialize",
@@ -26,6 +34,7 @@ btn_initialize = tk.Button(
     relief="solid",
     activebackground="#45a049",
     activeforeground="white",
+    command=initialize_database,
 )
 
 btn_challenge = tk.Button(
@@ -71,9 +80,7 @@ btn_statistics = tk.Button(
 # background_photo = PhotoImage(file='maurits-bausenhart-XtcZbSPVJ3A-unsplash.png')
 # photo =tk.Label(main_window, image =background_photo,height='800')
 # photo.place(x = 0, y = 0)
-btn_initialize.pack(
-    pady="20",
-)
+btn_initialize.pack(pady="20",)
 btn_challenge.pack(pady="20")
 btn_manage.pack(pady="20")
 btn_statistics.pack(pady="20")
