@@ -1,6 +1,8 @@
 import tkinter as tk
-from tkinter import messagebox
 from InitializeButton import InitializeButton
+from ManageButton import ManageButton
+from ChallengeButton import ChallengeButton
+from StatisticsButton import StatisticsButton
 
 main_window = tk.Tk()
 main_window.title("Tennis Ladder")
@@ -24,6 +26,27 @@ scrollbar.pack(side="right", fill="y")
 top_frame = tk.Frame(scrollable_frame, bg="#f0f0f0")
 top_frame.pack(side="top", fill="x", pady=10)
 
+
+
+
+#gets button initialize from InitializeButton.py
+initialize_button = InitializeButton(top_frame)
+initialize_button.get_button().pack(side="left", padx=10)
+
+#gets button manage from ManageButton.py
+manage_button = ManageButton(top_frame)
+manage_button.get_button().pack(side="left", padx=10)
+
+# Get the Challenge button from ChallengeButton.py
+challenge_button = ChallengeButton(top_frame)
+challenge_button.get_button().pack(side="left", padx=10)
+
+
+# Get the Statistics button from StatisticsButton.py
+statistics_button = StatisticsButton(top_frame)
+statistics_button.get_button().pack(side="left", padx=10)
+
+
 # Function to exit the application linked to btn_exit
 def exit_application():
     main_window.destroy()
@@ -42,57 +65,5 @@ btn_exit = tk.Button(
     command=exit_application,
 )
 btn_exit.pack(side="left", padx=10)
-
-#gets button initialize from InitializeButton.py
-initialize_button = InitializeButton(top_frame)
-initialize_button.get_button().pack(side="left", padx=10)
-
-btn_challenge = tk.Button(
-    top_frame,
-    text="Challenge",
-    font=("Arial", 12, "bold"),
-    bg="#4CAF50",
-    fg="white",
-    width=20,
-    height=2,
-    bd=0,
-    relief="solid",
-    activebackground="#45a049",
-    activeforeground="white",
-)
-
-btn_manage = tk.Button(
-    top_frame,
-    text="Manage",
-    font=("Arial", 12, "bold"),
-    bg="#4CAF50",
-    fg="white",
-    width=20,
-    height=2,
-    bd=0,
-    relief="solid",
-    activebackground="#45a049",
-    activeforeground="white",
-)
-
-btn_statistics = tk.Button(
-    top_frame,
-    text="Statistics",
-    font=("Arial", 12, "bold"),
-    bg="#4CAF50",
-    fg="white",
-    width=20,
-    height=2,
-    bd=0,
-    relief="solid",
-    activebackground="#45a049",
-    activeforeground="white",
-)
-
-
-# Pack the buttons horizontally in the top frame
-btn_challenge.pack(side="left", padx=10)
-btn_manage.pack(side="left", padx=10)
-btn_statistics.pack(side="left", padx=10)
 
 main_window.mainloop()
