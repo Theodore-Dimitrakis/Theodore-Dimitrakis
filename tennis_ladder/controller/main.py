@@ -1,57 +1,67 @@
 import tkinter as tk
+from tkinter import PhotoImage
+from PIL import Image,ImageTk
 from InitializeButton import InitializeButton
 from ManageButton import ManageButton
 from ChallengeButton import ChallengeButton
 from StatisticsButton import StatisticsButton
-
+# Create of main_window for tkinter
 main_window = tk.Tk()
 main_window.title("Tennis Ladder")
-main_window.state("zoomed")  # Opens the window in fullscreen mode
+main_window.state("zoomed")  # Full size of window
 
-# Create a scrollable frame
-canvas = tk.Canvas(main_window)
-scrollbar = tk.Scrollbar(main_window, orient="vertical", command=canvas.yview)
-scrollable_frame = tk.Frame(canvas)
+# Upload Picture for pathing
+image = Image.open("maurits-bausenhart-XtcZbSPVJ3A-unsplash.png")
 
-# Configure the canvas and scrollbar
-scrollable_frame.bind("<Configure>",lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
-canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-canvas.configure(yscrollcommand=scrollbar.set)
+#Transaction from Uploading to Picture
+photo = ImageTk.PhotoImage(image)
 
-# Pack the canvas and scrollbar
-canvas.pack(side="left", fill="both", expand=True)
-scrollbar.pack(side="right", fill="y")
+#Create background_label(full-sized)for the Image
+background_label = tk.Label(main_window, image=photo)
+background_label.place(relwidth=1, relheight=1, x=0, y=0)  # Κάνει την εικόνα να καλύπτει όλο το παράθυρο
 
-# Create a frame at the top to hold the buttons
-top_frame = tk.Frame(scrollable_frame, bg="#f0f0f0")
-top_frame.pack(side="top", fill="x", pady=10)
+#Create Frame for All_buttons
+button_frame = tk.Frame(main_window,bg='black',bd=2)  # Frame για κουμπιά
+button_frame.pack(side="left", fill="y",pady='160')  # Τοποθετεί το frame κάθετα στην αριστερή πλευρά
 
+# # Δημιουργία Scrollbar σε ξεχωριστό frame
+# scrollbar_frame = tk.Frame(main_window)  # Ξεχωριστό frame για το scrollbar
+# scrollbar_frame.pack(side="right", fill="y")
+#
+# scrollbar = tk.Scrollbar(scrollbar_frame, orient="vertical")
+# scrollbar.pack(side="right", fill="y")
+#
+# # Εδώ δημιουργούμε το Canvas για scrolling
+# canvas = tk.Canvas(scrollbar_frame)
+# canvas.pack(side="left", fill="both", expand=True)
+#
+# # Συνδέουμε το scrollbar με τον canvas
+# canvas.config(yscrollcommand=scrollbar.set)
+# scrollbar.config(command=canvas.yview)
 
+# # Δημιουργία των κουμπιών μέσα στον canvas
+# button_frame_canvas = tk.Frame(canvas)
+# canvas.create_window((0, 0), window=button_frame_canvas, anchor="nw")
 
+#Initialization of Buttons with cooperation of .py Buttons
+initialize_button = InitializeButton(button_frame)
+initialize_button.get_button().pack(padx=10, pady=10)
 
-#gets button initialize from InitializeButton.py
-initialize_button = InitializeButton(top_frame)
-initialize_button.get_button().pack(side="left", padx=10)
+manage_button = ManageButton(button_frame)
+manage_button.get_button().pack(padx=10, pady=10)
 
-#gets button manage from ManageButton.py
-manage_button = ManageButton(top_frame)
-manage_button.get_button().pack(side="left", padx=10)
+challenge_button = ChallengeButton(button_frame)
+challenge_button.get_button().pack(padx=10, pady=10)
 
-# Get the Challenge button from ChallengeButton.py
-challenge_button = ChallengeButton(top_frame)
-challenge_button.get_button().pack(side="left", padx=10)
-
-
-# Get the Statistics button from StatisticsButton.py
-statistics_button = StatisticsButton(top_frame)
-statistics_button.get_button().pack(side="left", padx=10)
-
+statistics_button = StatisticsButton(button_frame)
+statistics_button.get_button().pack(padx=10, pady=10)
 
 # Function to exit the application linked to btn_exit
 def exit_application():
     main_window.destroy()
+
 btn_exit = tk.Button(
-    top_frame,
+    button_frame,
     text="Exit",
     font=("Arial", 12, "bold"),
     bg="#f44336",
@@ -64,6 +74,12 @@ btn_exit = tk.Button(
     activeforeground="white",
     command=exit_application,
 )
-btn_exit.pack(side="left", padx=10)
 
+btn_exit.pack(padx=10, pady=10)
+
+# # Ενημερώνουμε το scrollregion για να μπορεί το scrollbar να ενεργοποιηθεί
+# button_frame_canvas.update_idletasks()
+# canvas.config(scrollregion=canvas.bbox("all"))
+
+#Display Tkinter window
 main_window.mainloop()
