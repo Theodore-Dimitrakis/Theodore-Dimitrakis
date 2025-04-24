@@ -3,8 +3,7 @@ from sqlalchemy.orm import  Session
 from Example import player_repository
 from repository.PlayerRepository import PlayerRepository
 from entity.Player import  Player
-
-
+class PlayerService:
     def __init__(self,session:Session,player_repository:PlayerRepository):
         self.session=session
         self.player_repository=player_repository
@@ -16,7 +15,7 @@ from entity.Player import  Player
         self.player_repository.create(new_player)
         return new_player
 
-    def delete_player(self,player_id:int):#Deletes a player and updates the rakings of the remaining players
+    def delete_player(self,player_id:int):
         player_to_delete=self.session.query(Player).filter(Player.player_id==player_id).one_or_none()
 
         if player_to_delete:
