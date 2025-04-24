@@ -47,7 +47,7 @@ class PlayerService:
 
     def get_all_players(self ) -> list[Player]:# Returns all players
         players = self.player_repository.get_all()
-        return players
+        return players ###
 
 
 
