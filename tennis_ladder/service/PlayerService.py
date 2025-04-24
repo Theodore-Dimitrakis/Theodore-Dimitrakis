@@ -1,10 +1,10 @@
 from sqlalchemy.orm import  Session
 
-from Example import player_repository
 from repository.PlayerRepository import PlayerRepository
 from entity.Player import  Player
 
 class PlayerService:
+
     def __init__(self,session:Session,player_repository:PlayerRepository):
         self.session=session
         self.player_repository=player_repository
@@ -20,16 +20,15 @@ class PlayerService:
         player_to_delete=self.session.query(Player).filter(Player.player_id==player_id).one_or_none()
 
         if player_to_delete:
-            deteted_player_rank=player_to_delete.rank
+            deleted_player_rank=player_to_delete.rank
             self.session.delete(player_to_delete)
             self.session.commit()
-            player_to_update=self.session.query(Player).filter(Player.rank>deteted_player_rank).all()
+            player_to_update=self.session.query(Player).filter(Player.rank>deleted_player_rank).all()
             for player in player_to_update:
                 player.rank-=1
                 self.session.commit()
         else:
             print(f"{player_id}not fount","\U0001F605")
-
 
     def update_ranking_after_deletion(self,deleted_player_rank:int):
         players = self.player_repository.get_all()
@@ -43,7 +42,7 @@ class PlayerService:
 
     def get_all_players(self ) -> list[Player]:
         players = self.player_repository.get_all()
-        return players ###
+        return players
 
 
 
