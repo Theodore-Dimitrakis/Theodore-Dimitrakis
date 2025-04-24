@@ -6,8 +6,7 @@ from entity.Player import  Player
 
 
 
-    def add_player(self, name: str, rank: int):
-        return self.player_dao.create(name, rank)
+
 
     def __init__(self,session:Session,player_repository:PlayerRepository):
         self.session=session
