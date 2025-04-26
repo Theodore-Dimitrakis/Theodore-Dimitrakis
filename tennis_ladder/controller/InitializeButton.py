@@ -12,12 +12,14 @@ class InitializeButton:
     Class to create and manage the Initialize button for the Tennis Ladder application.
     """
 
-    def __init__(self, parent_frame):
+    def __init__(self, parent_frame, refresh_leaderboard):
         """
         Initialize the InitializeButton class and create the button.
         :param parent_frame: The frame where the button will be placed.
+        :param refresh_leaderboard: Function to refresh the leaderboard.
         """
         self.parent_frame = parent_frame
+        self.refresh_leaderboard = refresh_leaderboard
         self.button = tk.Button(
             self.parent_frame,
             text="Initialize",
@@ -35,11 +37,12 @@ class InitializeButton:
 
     def initialize_database(self):
         """
-        Function to initialize the database and display a success message.
+        Function to initialize the database and refresh the leaderboard.
         """
         db_init = DBInit()
         db_init.initialize_db()
         messagebox.showinfo("Tennis Ladder Initialized!", "Tennis ladder is now Open!\nThere are 21 players in the ladder")
+        self.refresh_leaderboard()  # Refresh the leaderboard after initialization
 
     def get_button(self):
         """

@@ -1,85 +1,53 @@
 import tkinter as tk
 from tkinter import PhotoImage
-from PIL import Image,ImageTk
+from PIL import Image, ImageTk
 from InitializeButton import InitializeButton
 from ManageButton import ManageButton
-from ChallengeButton import ChallengeButton
-from StatisticsButton import StatisticsButton
+from controller.ChallengeButton import create_challenge_button  # Import the Challenge button function
+from controller.StatisticsButton import create_statistics_button  # Import the Statistics button function
+from controller.ExitButton import create_exit_button  # Import the Exit button function
+from controller.Leaderboard import add_leaderboard_to_main_window  # Import the leaderboard function
+
 # Create of main_window for tkinter
 main_window = tk.Tk()
 main_window.title("Tennis Ladder")
 main_window.state("zoomed")  # Full size of window
 
-# Upload Picture for pathing
-image = Image.open("maurits-bausenhart-XtcZbSPVJ3A-unsplash.png")
+# Set the background image
+background_image = ImageTk.PhotoImage(Image.open("maurits-bausenhart-XtcZbSPVJ3A-unsplash.png"))
+background_label = tk.Label(main_window, image=background_image)
+background_label.place(relwidth=1, relheight=1)  # Cover the entire window
 
-#Transaction from Uploading to Picture
-photo = ImageTk.PhotoImage(image)
+# Create Frame for All_buttons
+button_frame = tk.Frame(main_window, bg='black', bd=2)  # Frame for buttons
+button_frame.pack(side="left", fill="y", pady='160')  # Places the frame vertically on the left side
 
-#Create background_label(full-sized)for the Image
-background_label = tk.Label(main_window, image=photo)
-background_label.place(relwidth=1, relheight=1, x=0, y=0)  # Κάνει την εικόνα να καλύπτει όλο το παράθυρο
+# Create Frame for Leaderboard
+leaderboard_frame = tk.Frame(main_window, bg="white", bd=2, width=600, height=450)  # Tripled dimensions
+leaderboard_frame.place(relx=0.2, rely=0.1)  # Position it next to the buttons
 
-#Create Frame for All_buttons
-button_frame = tk.Frame(main_window,bg='black',bd=2)  # Frame για κουμπιά
-button_frame.pack(side="left", fill="y",pady='160')  # Τοποθετεί το frame κάθετα στην αριστερή πλευρά
+#Add the leaderboard to the leaderboard frame and get the refresh function
+refresh_leaderboard = add_leaderboard_to_main_window(leaderboard_frame)
 
-# # Δημιουργία Scrollbar σε ξεχωριστό frame
-# scrollbar_frame = tk.Frame(main_window)  # Ξεχωριστό frame για το scrollbar
-# scrollbar_frame.pack(side="right", fill="y")
-#
-# scrollbar = tk.Scrollbar(scrollbar_frame, orient="vertical")
-# scrollbar.pack(side="right", fill="y")
-#
-# # Εδώ δημιουργούμε το Canvas για scrolling
-# canvas = tk.Canvas(scrollbar_frame)
-# canvas.pack(side="left", fill="both", expand=True)
-#
-# # Συνδέουμε το scrollbar με τον canvas
-# canvas.config(yscrollcommand=scrollbar.set)
-# scrollbar.config(command=canvas.yview)
-
-# # Δημιουργία των κουμπιών μέσα στον canvas
-# button_frame_canvas = tk.Frame(canvas)
-# canvas.create_window((0, 0), window=button_frame_canvas, anchor="nw")
-
-#Initialization of Buttons with cooperation of .py Buttons
-initialize_button = InitializeButton(button_frame)
+# Add the Initialize button to the button frame
+initialize_button = InitializeButton(button_frame, refresh_leaderboard)
 initialize_button.get_button().pack(padx=10, pady=10)
 
-manage_button = ManageButton(button_frame)
-manage_button.get_button().pack(padx=10, pady=10)
+#Add the Manage button to the button frame with a refresh function for the leaderboard
+manage_button = ManageButton(button_frame, refresh_leaderboard)
+manage_button.pack(padx=10, pady=10)
 
-challenge_button = ChallengeButton(button_frame)
-challenge_button.get_button().pack(padx=10, pady=10)
+# Add the Challenge button to the button frame
+challenge_button = create_challenge_button(button_frame)
+challenge_button.pack(padx=10, pady=10)
 
-statistics_button = StatisticsButton(button_frame)
-statistics_button.get_button().pack(padx=10, pady=10)
+# Add the Statistics button to the button frame
+statistics_button = create_statistics_button(button_frame)
+statistics_button.pack(padx=10, pady=10)
 
-# Function to exit the application linked to btn_exit
-def exit_application():
-    main_window.destroy()
+# Create the Exit button
+exit_button = create_exit_button(button_frame, main_window)
+exit_button.pack(padx=10, pady=10)
 
-btn_exit = tk.Button(
-    button_frame,
-    text="Exit",
-    font=("Arial", 12, "bold"),
-    bg="#f44336",
-    fg="white",
-    width=20,
-    height=2,
-    bd=0,
-    relief="solid",
-    activebackground="#d32f2f",
-    activeforeground="white",
-    command=exit_application,
-)
-
-btn_exit.pack(padx=10, pady=10)
-
-# # Ενημερώνουμε το scrollregion για να μπορεί το scrollbar να ενεργοποιηθεί
-# button_frame_canvas.update_idletasks()
-# canvas.config(scrollregion=canvas.bbox("all"))
-
-#Display Tkinter window
+# Display Tkinter window
 main_window.mainloop()
