@@ -1,19 +1,21 @@
 import tkinter as tk
 from tkinter import messagebox
+import sys
 
-class StatisticsButton:
-    """
-    Class to create and manage the Statistics button for the Tennis Ladder application.
-    """
 
-    def __init__(self, parent_frame):
-        """
-        Initialize the StatisticsButton class and create the button.
-        :param parent_frame: The frame where the button will be placed.
-        """
-        self.parent_frame = parent_frame
-        self.button = tk.Button(
-            self.parent_frame,
+#'Μονοπάτι' για σύνδεση μεταξύ φακέλων service και του συγκεκριμένου αρχείου,για εύρεση MatchService,PlayerService
+sys.path.append("C:\\Users\\Ελένη\\EAP_tennis_ladder\\tennis_ladder\\service")
+from service.MatchService import MatchService
+from service.PlayerService import PlayerService
+
+def create_statistics_button(parent_frame):
+
+        def statistics_action():
+           messagebox.showinfo("Statistics Button", "Statistics functionality is not implemented yet!")
+
+
+        statistics_button = tk.Button(
+            parent_frame,
             text="Statistics",
             font=("Arial", 12, "bold"),
             bg="#4CAF50",
@@ -24,18 +26,6 @@ class StatisticsButton:
             relief="solid",
             activebackground="#45a049",
             activeforeground="white",
-            command=self.statistics_action,
+            command=statistics_action,
         )
-
-    def statistics_action(self):
-        """
-        Function to handle the Statistics button action.
-        """
-        messagebox.showinfo("Statistics Button", "Statistics functionality is not implemented yet!")
-
-    def get_button(self):
-        """
-        Return the button instance.
-        :return: The Statistics button instance.
-        """
-        return self.button
+        return statistics_button
