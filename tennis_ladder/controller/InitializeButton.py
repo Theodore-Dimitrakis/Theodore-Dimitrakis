@@ -39,7 +39,7 @@ class InitializeButton:
         """
         db_init = DBInit()
         db_init.initialize_db()
-        messagebox.showinfo("Tennis Ladder Initialized!", "Tennis ladder is now Open!\nThere are 21 players in the ladder")
+        messagebox.showinfo("Tennis Ladder Initialized!", "Tennis ladder is now Open!\nThere are 20 players in the ladder")
 
     def get_button(self):
         """
