@@ -24,7 +24,7 @@ class MatchService:
             print("One or both players not found.")
             return
 
-        if abs(challenger.rank - opponent.rank) > 3:  # assuming N=3
+        if abs(challenger.rank - opponent.rank) > 3:
             print("Challenge is invalid: Player is too far above to challenge.")
             return
 
@@ -77,3 +77,77 @@ class MatchService:
 
             winner.rank = loser_rank
             self.session.commit()
+
+    def simulate_round(self, challenger_id: int, opponent_id: int):
+        players = (
+            self.session.query(Player)
+            .order_by(Player.rank)
+            .all()
+        )
+        player_by_id = {player.player_id: player for player in players}
+        initial_ranks = {player.player_id: player.rank for player in players}
+        played_ids = set()
+
+        self.create_match(challenger_id, opponent_id)
+        played_ids.update({challenger_id, opponent_id})
+
+        remaining_players = [p for p in players if p.player_id not in played_ids]
+
+        matches_to_simulate = []
+
+        remaining_players.sort(key=lambda p: initial_ranks[p.player_id], reverse=True)
+
+        while remaining_players:
+            challenger = remaining_players.pop(0)
+            challenger_rank = initial_ranks[challenger.player_id]
+
+            possible_opponents = [
+                p for p in remaining_players
+                if 0 < (challenger_rank - initial_ranks[p.player_id]) <= 3
+            ]
+
+            if not possible_opponents:
+                print(f"{challenger.name} could not find a valid opponent and skips the round.")
+                continue
+
+            opponent = min(possible_opponents, key=lambda p: initial_ranks[p.player_id])
+
+            matches_to_simulate.append((challenger, opponent))
+
+            remaining_players.remove(opponent)
+
+        for player1, player2 in matches_to_simulate:
+            challenger_sets_won = random.randint(0, 2)
+            opponent_sets_won = random.randint(0, 2)
+
+            while challenger_sets_won == opponent_sets_won:
+                challenger_sets_won = random.randint(0, 2)
+                opponent_sets_won = random.randint(0, 2)
+
+            if challenger_sets_won > opponent_sets_won:
+                winner = player1
+                loser = player2
+            else:
+                winner = player2
+                loser = player1
+
+            winner.total_wins += 1
+            loser.total_losses += 1
+
+            if winner.rank > loser.rank:
+                self.update_ranks_after_challenge(winner, loser)
+
+            set_scores = f"{challenger_sets_won}-{opponent_sets_won}"
+
+            match = Match(
+                player1=player1,
+                player2=player2,
+                set_scores=set_scores,
+                winner=winner,
+            )
+
+            self.match_repository.create(match)
+
+            print(f"Auto Match: {player1.name} vs {player2.name}, Winner: {winner.name}, Score: {set_scores}")
+
+        self.session.commit()
