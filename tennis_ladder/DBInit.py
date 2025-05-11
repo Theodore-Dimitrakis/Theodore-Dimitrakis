@@ -4,6 +4,7 @@ from db_utils.DBUtils import DBUtils
 # We need the Match and Player imports, otherwise the db schema will not create the matches and players tables
 from entity.Match import Match
 from entity.Player import Player
+from entity.LeagueRound import LeagueRound
 
 class DBInit:
     def __init__(self):
