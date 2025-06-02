@@ -61,7 +61,13 @@ class MatchService:
         )
 
         self.match_repository.create(match)
-        print(f"Match created: {challenger.name} vs {opponent.name}, Winner: {winner.name}, Score: {set_scores}")
+
+        return {
+            "challenger": challenger.name,
+            "opponent": opponent.name,
+            "score": set_scores,
+            "winner": winner.name
+        }
 
     def update_ranks_after_challenge(self, winner: Player, loser: Player):
         winner_rank = winner.rank
@@ -123,7 +129,12 @@ class MatchService:
         match = Match(player1=player1, player2=player2, set_scores=set_scores, winner=winner)
         self.match_repository.create(match)
 
-        print(f"Auto Match: {player1.name} vs {player2.name}, Winner: {winner.name}, Score: {set_scores}")
+        return {
+            "challenger": player1.name,
+            "opponent": player2.name,
+            "score": set_scores,
+            "winner": winner.name
+        }
 
     def _record_new_round(self, round_number: int):
         new_round = LeagueRound(round_number=round_number)
@@ -151,17 +162,30 @@ class MatchService:
         players = self._get_players_ordered_by_rank()
         initial_ranks = {p.player_id: p.rank for p in players}
 
-        self.create_match(challenger_id, opponent_id)
+        challenge_result = self.create_match(challenger_id, opponent_id)
+
+        match_results = []
+        if challenge_result and "error" not in challenge_result:
+            match_results.append(challenge_result)
+
         played_ids = {challenger_id, opponent_id}
         remaining_players = [p for p in players if p.player_id not in played_ids]
 
         matches_to_simulate = self._pair_remaining_players(remaining_players, initial_ranks)
 
         for player1, player2 in matches_to_simulate:
-            self._simulate_and_record_match(player1, player2)
+            result = self._simulate_and_record_match(player1, player2)
+            if result:
+                match_results.append(result)
 
         new_round_number = rounds_played + 1
         self._record_new_round(new_round_number)
 
         if new_round_number == 20:
-            self._announce_tournament_winner()
+            return self._announce_tournament_winner()
+
+        print(f"\n--- Round {new_round_number} Match Results ---")
+        for match in match_results:
+            print(f"{match['challenger']} vs {match['opponent']} — Winner: {match['winner']} | Score: {match['score']}")
+
+        return match_results

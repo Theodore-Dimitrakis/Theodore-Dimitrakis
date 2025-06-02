@@ -48,8 +48,15 @@ class PlayerService:
 
     def show_statistics(self ):
         players = self.player_repository.get_all()
+        stats = []
         for player in players:
-            print(f"Name: {player.name}, Rank: {player.rank}, Wins: {player.total_wins}, Losses: {player.total_losses}")
+            stats.append({
+                'name': player.name,
+                'rank': player.rank,
+                'wins': player.total_wins,
+                'losses': player.total_losses
+            })
+        return stats
 
     def show_ordered_by_rank(self) -> list[Player]:
         players = self.player_repository.get_all()

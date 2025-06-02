@@ -30,9 +30,9 @@ if __name__ == "__main__":
 
     #match_service.create_match(4,1)
 
-    #match_service.simulate_round(4, 3)
+    match_service.simulate_round(1, 2)
     #player_service.show_statistics()
-    player_service.show_ordered_by_rank()
+    #player_service.show_ordered_by_rank()
 
 
     # Test listing all matches after creation
