@@ -30,7 +30,7 @@ leaderboard_frame.place(relx=0.2, rely=0.1)  # Position it next to the buttons
 refresh_leaderboard = add_leaderboard_to_main_window(leaderboard_frame)
 
 # Add the Initialize button to the button frame
-initialize_button = InitializeButton(button_frame, refresh_leaderboard)
+initialize_button = InitializeButton(button_frame)
 initialize_button.get_button().pack(padx=10, pady=10)
 
 #Add the Manage button to the button frame with a refresh function for the leaderboard
