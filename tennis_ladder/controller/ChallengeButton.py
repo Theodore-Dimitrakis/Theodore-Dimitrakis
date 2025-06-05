@@ -307,142 +307,11 @@ def create_challenge_button(parent_frame):
 
             return dictionary_names_with_images
 
-        def playing_mini_video_before_presentation_of_user_choice_players(name_challenger,name_opponent):
-
-
-            default_images_for_mini_video_before_presentation = load_images_with_PhotoImage()
-            default_images_for_running_presentation = default_images_for_mini_video_before_presentation[5:10]
-
-            try:
-                new_window_for_default_images_presentation = tk.Toplevel(parent_frame)
-                new_window_for_default_images_presentation.geometry("930x400")
-                new_window_for_default_images_presentation.resizable(False, False)
-                loading_label= tk.Label(new_window_for_default_images_presentation, text="LOADING", font=("Arial", 22))
-                loading_label.pack()
-
-                dot_label = tk.Label(new_window_for_default_images_presentation, text="",font=("Arial", 26),fg="green")
-                default_image_label = tk.Label(new_window_for_default_images_presentation,text="")
-
-                global num_index_of_dots,new_window_for_default_images_presentation_is_running
-                num_index_of_dots= 0
-
-                if len(default_images_for_running_presentation) > 0:
-                    def running_dots_with_images_same_time():
-                                global num_index_of_dots
-                                dots_string = "." * num_index_of_dots
-                                dot_label.config(text=dots_string)
-                                dot_label.pack()
-                                num_index_of_dots += 1
-                                if num_index_of_dots > 4:
-                                    num_index_of_dots = 0
-                                new_window_for_default_images_presentation.after(500, running_dots_with_images_same_time)
-
-                    def counting_time_for_running_images(num):
-                        try:
-                            if num < len(default_images_for_running_presentation):
-                                    image_showing = default_images_for_running_presentation[num]
-                                    image_showing.label = image_showing
-                                    default_image_label.config(image=image_showing)
-                                    default_image_label.pack()
-                                    new_window_for_default_images_presentation.after(2500,counting_time_for_running_images,num+1)
-                            else:
-                                new_window_for_default_images_presentation.after(500,check_if_mini_video_finish_and_continue)
-                        except Exception as e:
-                            messagebox.showinfo("Error",f"Error , εδω ειναι.")
-
-                    def running_two_functions():
-                        running_dots_with_images_same_time()
-                        counting_time_for_running_images(0)
-
-                    def check_if_mini_video_finish_and_continue():
-                        new_window_for_default_images_presentation.destroy()
-                        playing_choice_user_match(name_of_challenger, name_of_opponent)
-
-
-                else:
-                    raise Exception("No images to be displayed")
-
-                running_two_functions()
-
-            except Exception as e:
-                messagebox.showinfo("Error", f"Error: {str(e)}")
-
-        def playing_choice_user_match(challenger_name,opponent_name):
-
-            default_images_for_playing_choice_user_match = load_images_with_PhotoImage()
-
-            try:
-                ChallengerName = False
-                OpponentName = False
-            #1) το height του παραθυρου θα μεινει εκει περα και αν δω οτι το Label του ονοματος παικτη κανει οριακα την εικονα
-            #του παικτη με το παραθυρο , τοτε το μεγαλωνω.
-            #2)το width του παραθυρου , αναλογα με την default εικονα και τον δευτερο παικτη μπορει να επεκταθει.
-            #3)να φτιαξω τα width,height των φωτογραφιων , ωστε οπτικα εχει μεγαλυτερο ή ισο με την διασταση
-            # του παραθυρου να γινεται ποιο προσαρμοσμενη.
-                window_playing_choice_user_match = tk.Toplevel(parent_frame)
-                window_playing_choice_user_match.geometry("930x400")
-                window_playing_choice_user_match.resizable(False, False)
-                dictionary = load_images_into_dictionary_with_name_images_as_key_values()
-
-                for key,value in dictionary.items():
-                    if challenger_name == key:
-                        name_challenger_label = tk.Label(window_playing_choice_user_match, text=key,font=("Arial", 14))
-                        challenger_photo = value
-                        challenger_label = tk.Label(window_playing_choice_user_match, image=challenger_photo)
-                        challenger_label.image = challenger_photo
-                        name_challenger_label.grid(row=0,column=0)
-                        challenger_label.grid(row=1,column=0)
-                        ChallengerName = True
-                    if opponent_name == key:
-                        name_opponent_label = tk.Label(window_playing_choice_user_match, text=key, font=("Arial", 14))
-                        opponent_photo = value
-                        opponent_label = tk.Label(window_playing_choice_user_match, image=opponent_photo)
-                        opponent_label.image = opponent_photo
-                        name_opponent_label.grid(row=0, column=3)
-                        opponent_label.grid(row=1, column=3)
-                        OpponentName = True
-                    if ChallengerName and OpponentName == True:
-                        versus_label = tk.Label(window_playing_choice_user_match,image=default_images_for_playing_choice_user_match[25])
-                        versus_photo = default_images_for_playing_choice_user_match[10]
-                        versus_label.image = versus_photo
-                        versus_label.grid(row=1, column=2)
-
-                the_game_will_start_in_label = tk.Label(window_playing_choice_user_match,text="THE GAME WILL START IN...",font=("Arial",22))
-                the_game_will_start_in_label.grid(row=2,column=2)
-
-                time_running_label = tk.Label(window_playing_choice_user_match, text="", font=("Arial", 22))
-                time_running_label.grid(row=3,column=2)
-
-                # challenger_set_show_label = tk.Label(window_playing_choice_user_match,text="")
-                # opponent_set_show_label = tk.Label(window_playing_choice_user_match,text="")
-                #
-                # def show_scores_of_players_user_choice(challenger_id,opponent_id):
-                #
-                #     challenger_set_show_label.config(text=f"{match_service.}")
-
-                def countdown_time_game():
-                    def counting_num(num):
-                        if num >= 0:
-                            time_running_label.config(text=str(num))
-                            window_playing_choice_user_match.after(1000, counting_num, num - 1)
-                        else:
-
-                            window_playing_choice_user_match.destroy()
-                    counting_num(3)
-                countdown_time_game()
-
-
-            except Exception as e:
-                messagebox.showinfo("Error", f"Error: {e}")
-            # challenger_label - tk.Label(window_of_video_match,image=list_of_match_images[id_challenger])
-
-
         def start_challenge():
-            global name_of_challenger,name_of_opponent
+            global name_of_challenger, name_of_opponent, match_result
             name_of_challenger = value_for_option_menu_1.get()
             name_of_opponent = value_for_option_menu_2.get()
 
-            # Διόρθωση 3: Έλεγχος για μη έγκυρη επιλογή.
             if name_of_challenger == "Select Player 1" or name_of_opponent == "Select Player 2":
                 messagebox.showwarning("Invalid Selection", "Please select both players before proceeding.")
                 new_window_for_challenge.destroy()
@@ -453,7 +322,7 @@ def create_challenge_button(parent_frame):
                 return
 
             try:
-                global all_players_list
+                global all_players_list, id_of_challenger, id_of_opponent
                 all_players_list = player_service_initialization.get_all_players()
                 id_of_challenger = ''
                 id_of_opponent = ''
@@ -463,24 +332,148 @@ def create_challenge_button(parent_frame):
                     elif index.name == name_of_opponent:
                         id_of_opponent = index.player_id
 
-                match_service = MatchService(session,match_repository,player_repository,league_round_repository)
-                some_error_in_create_match = match_service.create_match(id_of_challenger, id_of_opponent)
+                match_result = match_service.create_match(id_of_challenger, id_of_opponent)
 
-                if some_error_in_create_match is not None:
-                    messagebox.showwarning("Invalid Match", some_error_in_create_match)
+                if match_result is None:
+                    messagebox.showwarning("Invalid Match", "Could not create match.")
                     new_window_for_challenge.destroy()
                     return
 
                 match_service.simulate_round(id_of_challenger, id_of_opponent)
                 messagebox.showinfo("Success", "The challenge has been simulated successfully.")
                 new_window_for_challenge.destroy()
-                playing_mini_video_before_presentation_of_user_choice_players(name_of_challenger,name_of_opponent)
-
-
+                playing_mini_video_before_presentation_of_user_choice_players(name_of_challenger, name_of_opponent)
 
             except Exception as e:
                 messagebox.showerror("Error", str(e))
                 new_window_for_challenge.destroy()
+
+        def playing_mini_video_before_presentation_of_user_choice_players(name_challenger, name_opponent):
+            default_images_for_mini_video_before_presentation = load_images_with_PhotoImage()
+            default_images_for_running_presentation = default_images_for_mini_video_before_presentation[5:10]
+
+            try:
+                new_window_for_default_images_presentation = tk.Toplevel(parent_frame)
+                new_window_for_default_images_presentation.geometry("430x400")
+                new_window_for_default_images_presentation.resizable(False, False)
+                new_window_for_default_images_presentation.configure(bg="#45a049")
+                loading_label = tk.Label(new_window_for_default_images_presentation, text="LOADING",bg="#45a049",fg="white",font=("Arial", 22))
+                loading_label.pack()
+
+                dot_label = tk.Label(new_window_for_default_images_presentation, text="",bg="#45a049",fg="white",font=("Arial", 26))
+                default_image_label = tk.Label(new_window_for_default_images_presentation,bg="#45a049",text="")
+
+                global num_index_of_dots
+                num_index_of_dots = 0
+
+                def running_dots_with_images_same_time():
+                    global num_index_of_dots
+                    dots_string = "." * num_index_of_dots
+                    dot_label.config(text=dots_string)
+                    dot_label.pack()
+                    num_index_of_dots += 1
+                    if num_index_of_dots > 4:
+                        num_index_of_dots = 0
+                    new_window_for_default_images_presentation.after(500, running_dots_with_images_same_time)
+
+                def counting_time_for_running_images(num):
+                    try:
+                        if num < len(default_images_for_running_presentation):
+                            image_showing = default_images_for_running_presentation[num]
+                            image_showing.label = image_showing
+                            default_image_label.config(image=image_showing)
+                            default_image_label.pack()
+                            new_window_for_default_images_presentation.after(2500, counting_time_for_running_images,
+                                                                             num + 1)
+                        else:
+                            new_window_for_default_images_presentation.after(500,
+                                                                             check_if_mini_video_finish_and_continue)
+                    except Exception as e:
+                        messagebox.showinfo("Error", f"Error in mini video: {str(e)}")
+
+                def check_if_mini_video_finish_and_continue():
+                    new_window_for_default_images_presentation.destroy()
+                    playing_choice_user_match(name_challenger, name_opponent, match_result)
+
+                running_dots_with_images_same_time()
+                counting_time_for_running_images(0)
+
+            except Exception as e:
+                messagebox.showinfo("Error", f"Error: {str(e)}")
+
+        def playing_choice_user_match(challenger_name, opponent_name, match_result):
+            default_images_for_playing_choice_user_match = load_images_with_PhotoImage()
+
+            try:
+                ChallengerName = False
+                OpponentName = False
+                window_playing_choice_user_match = tk.Toplevel(parent_frame)
+                window_playing_choice_user_match.geometry("930x450")
+                window_playing_choice_user_match.resizable(False, False)
+                window_playing_choice_user_match.configure(bg="#45a049")
+                dictionary = load_images_into_dictionary_with_name_images_as_key_values()
+
+                for key, value in dictionary.items():
+                    if challenger_name == key:
+                        name_challenger_label = tk.Label(window_playing_choice_user_match, text=key,bg="#45a049",fg="white",font=("Arial", 14))
+                        challenger_photo = value
+                        challenger_label = tk.Label(window_playing_choice_user_match,bg="#45a049",image=challenger_photo)
+                        challenger_label.image = challenger_photo
+                        name_challenger_label.grid(row=0, column=0)
+                        challenger_label.grid(row=1, column=0)
+                        ChallengerName = True
+                    if opponent_name == key:
+                        name_opponent_label = tk.Label(window_playing_choice_user_match, text=key,bg="#45a049",fg="white",font=("Arial", 14))
+                        opponent_photo = value
+                        opponent_label = tk.Label(window_playing_choice_user_match,bg="#45a049",image=opponent_photo)
+                        opponent_label.image = opponent_photo
+                        name_opponent_label.grid(row=0, column=3)
+                        opponent_label.grid(row=1, column=3)
+                        OpponentName = True
+                    if ChallengerName and OpponentName:
+                        versus_label = tk.Label(window_playing_choice_user_match,bg="#45a049",
+                                                image=default_images_for_playing_choice_user_match[25])
+                        versus_photo = default_images_for_playing_choice_user_match[10]
+                        versus_label.image = versus_photo
+                        versus_label.grid(row=1, column=2)
+
+                score_label = tk.Label(window_playing_choice_user_match, text="",bg="#45a049",fg="white",font=("Arial", 24))
+                score_label.grid(row=3, column=2, pady=10)
+
+                winner_label = tk.Label(window_playing_choice_user_match, text="",bg="#45a049",fg="white",font=("Arial", 24))
+                winner_label.grid(row=4, column=2, pady=10)
+
+                the_game_will_start_in_label = tk.Label(window_playing_choice_user_match,
+                                                        text="THE GAME WILL START IN...",bg="#45a049",fg="white",font=("Arial", 22))
+                the_game_will_start_in_label.grid(row=2, column=2)
+
+                time_running_label = tk.Label(window_playing_choice_user_match, text="",bg="#45a049",fg="white",font=("Arial", 22))
+                time_running_label.grid(row=3, column=2)
+
+                def deleting_titles_time_running_and_game_will_start():
+                    the_game_will_start_in_label.destroy()
+                    time_running_label.destroy()
+
+                def inserting_time_with_score_winner_labels():
+                    score_label.config(text=f"Set Score: {match_result['score']}")
+                    winner_label.config(text=f"Winner: {match_result['winner']}")
+
+                def countdown_time_game():
+                    def counting_num(num):
+                        if num > 0:
+                            time_running_label.config(text=str(num))
+                            window_playing_choice_user_match.after(1000, counting_num, num - 1)
+                        elif num == 0:
+                            deleting_titles_time_running_and_game_will_start()
+                            inserting_time_with_score_winner_labels()
+
+                    counting_num(3)
+                countdown_time_game()
+
+
+
+            except Exception as e:
+                messagebox.showinfo("Error", f"Error: {e}")
 
         start_challenge_button = tk.Button(frame_menu, text='Start Challenge',font=("Arial", 12), command=start_challenge)
         start_challenge_button.grid(row=4, column=1, padx='10', pady='10')

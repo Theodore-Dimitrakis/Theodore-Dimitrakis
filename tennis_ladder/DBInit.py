@@ -46,9 +46,18 @@ class DBInit:
         self.insert_initial_players()
 
     def restart_db(self):
-        self.delete_database()
-        self.__init__()
-        self.initialize_db()
+        try:
+            self.session.close()
+            self.engine.dispose()
+            self.delete_database()
+            self.__init__()
+            self.initialize_db()
+            print("Database restarted successfully.")
+        except Exception as e:
+            print(f"Error into database restarting: {e}")
+        # self.delete_database()
+        # self.__init__()
+        # self.initialize_db()
 
 if __name__ == "__main__":
     db_init = DBInit()
