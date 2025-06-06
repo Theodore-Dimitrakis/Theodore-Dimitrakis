@@ -3,7 +3,6 @@ from tkinter import messagebox
 import sys
 import os
 
-# Add the parent directory to the system path to import DBInit
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from DBInit import DBInit
 
@@ -35,11 +34,15 @@ class InitializeButton:
 
     def initialize_database(self):
         """
-        Function to initialize the database and display a success message.
+        Function to initialize the database and display a success or error message.
         """
         db_init = DBInit()
-        db_init.initialize_db()
-        messagebox.showinfo("Tennis Ladder Initialized!", "Tennis ladder is now Open!\nThere are 20 players in the ladder")
+        try:
+            db_init.initialize_db()
+            messagebox.showinfo("Tennis Ladder Initialized!",
+                                "Tennis ladder is now Open!\nThere are 20 players in the ladder")
+        except RuntimeError as e:
+            messagebox.showerror("Initialization Failed", str(e))
 
     def get_button(self):
         """

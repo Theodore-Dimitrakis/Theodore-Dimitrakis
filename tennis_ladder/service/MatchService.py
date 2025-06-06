@@ -24,12 +24,10 @@ class MatchService:
         opponent = self.player_repository.get_by_id(opponent_id)
 
         if not challenger or not opponent:
-            print("One or both players not found.")
-            return
+            return {"error": "One or both players not found."}
 
         if abs(challenger.rank - opponent.rank) > 3:
-            print("Challenge is invalid: Player is too far above to challenge.")
-            return
+            return {"error": "Challenge is invalid: rank difference exceeds 3 positions."}
 
         challenger_sets_won = random.randint(0, 2)
         opponent_sets_won = random.randint(0, 2)
@@ -59,7 +57,6 @@ class MatchService:
             set_scores=set_scores,
             winner=winner,
         )
-
         self.match_repository.create(match)
 
         return {
@@ -149,23 +146,20 @@ class MatchService:
             .one_or_none()
         )
         if top_player:
-            print(f" The tournament winner is {top_player.name}!")
+            return {"tournament_winner": top_player.name}
+        return {"tournament_winner": "Unknown"}
 
     def simulate_round(self, challenger_id: int, opponent_id: int):
-        rounds_played = self.league_round_repository.get_total_rounds()
-        print(f"Rounds played so far: {rounds_played}")
-
-        if rounds_played >= 20:
-            print("20 rounds have been played. No more challenges can be issued.")
-            return
-
         players = self._get_players_ordered_by_rank()
         initial_ranks = {p.player_id: p.rank for p in players}
 
         challenge_result = self.create_match(challenger_id, opponent_id)
 
+        if isinstance(challenge_result, dict) and "error" in challenge_result:
+            return challenge_result
+
         match_results = []
-        if challenge_result and "error" not in challenge_result:
+        if challenge_result:
             match_results.append(challenge_result)
 
         played_ids = {challenger_id, opponent_id}
@@ -178,11 +172,14 @@ class MatchService:
             if result:
                 match_results.append(result)
 
+        rounds_played = self.league_round_repository.get_total_rounds()
         new_round_number = rounds_played + 1
         self._record_new_round(new_round_number)
 
         if new_round_number == 20:
-            return self._announce_tournament_winner()
+            winner = self.session.query(Player).filter(Player.rank == 1).one_or_none()
+            if winner:
+                return self._announce_tournament_winner()
 
         print(f"\n--- Round {new_round_number} Match Results ---")
         for match in match_results:

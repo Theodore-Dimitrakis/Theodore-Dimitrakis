@@ -1,5 +1,8 @@
 import os
-from db_utils.DBUtils import DBUtils
+
+from sqlalchemy import text
+
+from db_utils.DBUtils import DBUtils, Base
 
 # We need the Match and Player imports, otherwise the db schema will not create the matches and players tables
 from entity.Match import Match
@@ -40,27 +43,32 @@ class DBInit:
         self.session.commit()
 
     def initialize_db(self):
-        if self.database_exists():
-            raise RuntimeError("Database already exists. Initialization aborted.")
-        self.create_db()
+        if self.session.query(Player).first():
+            raise RuntimeError("Database already initialized. Cannot re-initialize.")
         self.insert_initial_players()
 
     def restart_db(self):
         try:
-            self.session.close()
-            self.engine.dispose()
-            self.delete_database()
-            self.__init__()
-            self.initialize_db()
+            self.session.execute(text("PRAGMA foreign_keys = OFF"))
+            Base.metadata.reflect(bind=self.engine)
+            for table in reversed(Base.metadata.sorted_tables):
+                self.session.execute(table.delete())
+
+            self.session.commit()
+            self.session.execute(text("PRAGMA foreign_keys = ON"))
+            #self.insert_initial_players()
+
             print("Database restarted successfully.")
+
         except Exception as e:
-            print(f"Error into database restarting: {e}")
-        # self.delete_database()
-        # self.__init__()
-        # self.initialize_db()
+            self.session.rollback()
+            print(f"Error when restarting database: {e}")
+
 
 if __name__ == "__main__":
     db_init = DBInit()
     #db_init.initialize_db()
-    db_init.restart_db()
+    db_init.create_db()
+    #db_init.insert_initial_players()
+    #db_init.restart_db()
 

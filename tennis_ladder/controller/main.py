@@ -1,14 +1,15 @@
 import tkinter as tk
-from tkinter import PhotoImage
+
 from PIL import Image, ImageTk
+
 from InitializeButton import InitializeButton
 from ManageButton import ManageButton
-from controller.RestartButton import create_restart_button
-from controller.RankingButton import create_ranking_button
 from controller.ChallengeButton import create_challenge_button  # Import the Challenge button function
-from controller.StatisticsButton import create_statistics_button  # Import the Statistics button function
 from controller.ExitButton import create_exit_button  # Import the Exit button function
 from controller.Leaderboard import add_leaderboard_to_main_window  # Import the leaderboard function
+from controller.RankingButton import create_ranking_button
+from controller.RestartButton import create_restart_button
+from controller.StatisticsButton import create_statistics_button  # Import the Statistics button function
 
 # Create of main_window for tkinter
 main_window = tk.Tk()
@@ -48,7 +49,7 @@ manage_button = ManageButton(button_frame, refresh_leaderboard)
 manage_button.pack(padx=10, pady=10)
 
 # Add the Challenge button to the button frame
-challenge_button = create_challenge_button(button_frame)
+challenge_button = create_challenge_button(button_frame, refresh_leaderboard)
 challenge_button.pack(padx=10, pady=10)
 
 # Add the Statistics button to the button frame

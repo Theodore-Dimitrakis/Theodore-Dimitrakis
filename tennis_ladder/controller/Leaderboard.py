@@ -1,16 +1,14 @@
+import os
+import sys
 import tkinter as tk
 from tkinter import ttk
-import sys
-import os
+
+from service.PlayerService import PlayerService
 
 # Add the parent directory to the system path to import PlayerRepository and DBInit
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from repository.PlayerRepository import PlayerRepository
 from DBInit import DBInit
-
-# ...existing code...
-
-# ...existing code...
 
 def add_leaderboard_to_main_window(parent_frame):
     """
@@ -20,6 +18,7 @@ def add_leaderboard_to_main_window(parent_frame):
     # Initialize the database session and repository
     db_init = DBInit()
     player_repository = PlayerRepository(db_init.session)
+    player_service = PlayerService(db_init.session, player_repository)
 
     # Create Treeview for Leaderboard
     leaderboard_tree = ttk.Treeview(parent_frame, columns=("Rank", "Name"), show="headings", height=15)  # Increased height
@@ -33,20 +32,16 @@ def add_leaderboard_to_main_window(parent_frame):
         """
         Refresh the leaderboard table with updated player data.
         """
-        # Clear the existing data in the Treeview
         for row in leaderboard_tree.get_children():
             leaderboard_tree.delete(row)
 
-        # Fetch updated player data and populate the Treeview
         try:
-            players = player_repository.get_all()
+            players = player_service.show_ordered_by_rank()
             for player in players:
                 leaderboard_tree.insert("", "end", values=(player.rank, player.name))
         except Exception as e:
             tk.messagebox.showerror("Error", f"Failed to refresh leaderboard: {e}")
 
-    # Populate the leaderboard initially
     refresh_leaderboard()
 
-    # Return the refresh function so it can be called externally
     return refresh_leaderboard
