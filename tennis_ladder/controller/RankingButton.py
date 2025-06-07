@@ -1,14 +1,12 @@
 import tkinter as tk
 from tkinter import messagebox
 import sys
+import os
 
-from MatchCRUDExamplesAndTesting import player_service
-#'Μονοπάτι' για σύνδεση μεταξύ φακέλων service και του συγκεκριμένου αρχείου,για εύρεση MatchService,PlayerService
-sys.path.append("C:\\Users\\Ελένη\\EAP_tennis_ladder\\tennis_ladder\\service")
-from ChallengeButton import connection_services_challenge_button
-connection_services_challenge_button()
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from controller.ChallengeButton import connection_services_challenge_button
 
-player_service, db_utils, db_init, session, match_repository, player_repository, league_round_repository = connection_services_challenge_button()
+player_service, db_utils, db_init, session, match_repository, player_repository, league_round_repository, match_service = connection_services_challenge_button()
 show_ordered_by_rank_initialization_for_ranking_button = player_service.show_ordered_by_rank()
 
 def create_ranking_button(parent_frame):

@@ -8,4 +8,3 @@ class LeagueRound(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     round_number = Column(Integer, nullable=False, unique=True)
-    #matches = relationship("Match", back_populates="league_round")

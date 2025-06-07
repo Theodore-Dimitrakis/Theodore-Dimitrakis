@@ -14,8 +14,6 @@ class Match(Base):
     set_scores = Column(String)
     winner_id = Column(Integer, ForeignKey('players.player_id'))
     date_played = Column(DateTime, default=datetime.now(timezone.utc))
-    # league_round_id = Column(Integer, ForeignKey('league_rounds.id'))
-    # league_round = relationship("LeagueRound", back_populates="matches")
 
 
     player1 = relationship("Player", foreign_keys=[player1_id])
@@ -27,7 +25,6 @@ class Match(Base):
         self.player2 = player2
         self.set_scores = set_scores
         self.winner = winner
-        #self.league_round = league_round
 
     def __repr__(self):
         return (f"Match(id={self.match_id}, player1={self.player1.name}, player2={self.player2.name}, "

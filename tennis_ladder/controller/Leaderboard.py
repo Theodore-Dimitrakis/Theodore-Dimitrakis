@@ -5,7 +5,6 @@ from tkinter import ttk
 
 from service.PlayerService import PlayerService
 
-# Add the parent directory to the system path to import PlayerRepository and DBInit
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from repository.PlayerRepository import PlayerRepository
 from DBInit import DBInit
@@ -15,7 +14,6 @@ def add_leaderboard_to_main_window(parent_frame):
     Add a leaderboard table to the main window.
     :param parent_frame: The frame where the leaderboard will be placed.
     """
-    # Initialize the database session and repository
     db_init = DBInit()
     player_repository = PlayerRepository(db_init.session)
     player_service = PlayerService(db_init.session, player_repository)

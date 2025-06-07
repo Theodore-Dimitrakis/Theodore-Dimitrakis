@@ -3,7 +3,8 @@ from tkinter import ttk, messagebox
 import sys
 import os
 
-# Add the parent directory to the system path to import PlayerService and DBInit
+from repository.LeagueRoundRepository import LeagueRoundRepository
+
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from service.PlayerService import PlayerService
 from repository.PlayerRepository import PlayerRepository
@@ -20,12 +21,23 @@ def ManageButton(parent_frame, refresh_leaderboard):
     db_init = DBInit()
     player_repository = PlayerRepository(db_init.session)
     player_service = PlayerService(db_init.session, player_repository)
+    league_round_repository = LeagueRoundRepository(db_init.session)
 
     def manage_action():
         """
         Function to handle the Manage button action.
         Opens a new window for managing players.
         """
+
+        # Check if any league round has started
+        rounds_played = league_round_repository.get_total_rounds()
+        if rounds_played > 0:
+            messagebox.showwarning(
+                "Action Not Allowed",
+                "Player management is disabled once the tournament has started."
+            )
+            return
+
         manage_window = tk.Toplevel(parent_frame)
         manage_window.title("Manage Players")
         manage_window.geometry("400x300")

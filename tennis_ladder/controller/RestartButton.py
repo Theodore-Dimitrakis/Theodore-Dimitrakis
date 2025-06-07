@@ -1,9 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
-import sys
 
 from DBInit import DBInit
-
 
 def create_restart_button(parent_frame):
     def restart_action():

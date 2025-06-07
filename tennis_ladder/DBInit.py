@@ -56,7 +56,6 @@ class DBInit:
 
             self.session.commit()
             self.session.execute(text("PRAGMA foreign_keys = ON"))
-            #self.insert_initial_players()
 
             print("Database restarted successfully.")
 
