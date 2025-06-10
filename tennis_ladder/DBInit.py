@@ -1,23 +1,17 @@
 import os
-
 from sqlalchemy import text
+from db_utils.DBUtils import DBUtils, Base, DB_FILE_PATH
 
-from db_utils.DBUtils import DBUtils, Base
-
-# We need the Match and Player imports, otherwise the db schema will not create the matches and players tables
 from entity.Match import Match
 from entity.Player import Player
 from entity.LeagueRound import LeagueRound
 
 class DBInit:
     def __init__(self):
-        project_root = os.path.dirname(os.path.abspath(__file__))
-        self.db_path = os.path.join(project_root, 'tennis_ladder.db')
-        self.db_url = f"sqlite:///{self.db_path}"
-        self.engine, self.session = DBUtils.create_engine_and_session(self.db_url)
+        self.engine, self.session = DBUtils.create_engine_and_session()
 
     def database_exists(self):
-        return os.path.exists(self.db_path)
+        return os.path.exists(DB_FILE_PATH)
 
     def create_db(self):
         DBUtils.create_tables(self.engine)
@@ -25,7 +19,7 @@ class DBInit:
 
     def delete_database(self):
         if self.database_exists():
-            os.remove(self.db_path)
+            os.remove(DB_FILE_PATH)
             print("Existing database deleted.")
 
     def insert_initial_players(self):
@@ -35,10 +29,7 @@ class DBInit:
             "Roy Emerson", "Rod Laver", "Bill Tilden", "Suzanne Lenglen", "Ken Rosewall", "Maria Sakkari",
             "Naomi Osaka", "Andre Agassi", "Bjorn Borg", "Pete Sampras"
         ]
-
-        player_objects = [Player(name=player_name, rank=i + 1)
-                          for i, player_name in enumerate(players)]
-
+        player_objects = [Player(name=player_name, rank=i + 1) for i, player_name in enumerate(players)]
         self.session.add_all(player_objects)
         self.session.commit()
 
@@ -53,21 +44,14 @@ class DBInit:
             Base.metadata.reflect(bind=self.engine)
             for table in reversed(Base.metadata.sorted_tables):
                 self.session.execute(table.delete())
-
             self.session.commit()
             self.session.execute(text("PRAGMA foreign_keys = ON"))
-
             print("Database restarted successfully.")
-
         except Exception as e:
             self.session.rollback()
             print(f"Error when restarting database: {e}")
 
-
 if __name__ == "__main__":
     db_init = DBInit()
-    #db_init.initialize_db()
-    db_init.create_db()
-    #db_init.insert_initial_players()
-    #db_init.restart_db()
+    db_init.initialize_db()
 
