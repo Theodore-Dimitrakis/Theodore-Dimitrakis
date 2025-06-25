@@ -24,10 +24,10 @@ class DBInit:
 
     def insert_initial_players(self):
         players = [
-            "Novak Djokovic", "Margaret Court", "Rafael Nadal", "Serena Williams",
-            "Steffi Graf", "Roger Federer", "Helen Wills", "Martina Navratilova", "Chris Evert", "Billie Jean King",
-            "Roy Emerson", "Rod Laver", "Bill Tilden", "Suzanne Lenglen", "Ken Rosewall", "Maria Sakkari",
-            "Naomi Osaka", "Andre Agassi", "Bjorn Borg", "Pete Sampras"
+            "Novak Djokovic", "Jannik Sinner", "Rafael Nadal", "Carlos Alcaraz",
+            "Alexander Zverev", "Roger Federer", "Jack Dreper", "Taylor Fritz", "Lorenzo Musetti", "Holger Rune",
+            "Ben Shelton", "Alex De Minaur", "Frances Tiafoe", "Jakub Mensik", "Fransisco Cerundolo", "Steffanos Tsitsipas",
+            "Sebastian Korda", "Nuno Borges", "Gabriel Diallo", "Gael Monfils"
         ]
         player_objects = [Player(name=player_name, rank=i + 1) for i, player_name in enumerate(players)]
         self.session.add_all(player_objects)
